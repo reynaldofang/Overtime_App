@@ -12,57 +12,78 @@ use App\Models\Setting;
 use DateTime;
 use Illuminate\Validation\Rule;
 
+
+
+
+
 class OvertimeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {   
-        $new_data = [];        
-        $data = Employee::with(['overtimes' => function($q) {
-        }])->get();
-        $selected_setting = Setting::first();
-        $formula = Reference::find($selected_setting->value);
 
-        for($i=0;$i<count($data);$i++){
-            $overtime_duration_total = 0;
-            array_push($new_data, $data[$i]);
-            if($new_data[$i]['overtimes'] != null && count($new_data[$i]['overtimes']) > 0){
-                $overtime = $new_data[$i]['overtimes'];
-                for($j=0;$j<count($overtime);$j++){
-                    $first  = new DateTime($overtime[$j]['time_started']);
-                    $second = new DateTime($overtime[$j]['time_ended']);
-                    $overtime_duration =  $first->diff( $second );
-                    $new_data[$i]['overtimes'][$j]['overtime_duration'] = (int) $overtime_duration->format( '%h' );
-                    $overtime_duration_total += ((int) $overtime_duration->format( '%h' ));
-                }
-            }
-            $new_data[$i]['overtime_duration_total'] = $overtime_duration_total;
-            $amount = str_replace('salary', $data[$i]['salary'], (str_replace('overtime_duration_total', $overtime_duration_total, $formula->expression)));
-            $new_data[$i]['amount'] = round(eval('return '.$amount.';'));
-        }
 
-        return $new_data;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * 
+     * * @OA\Post(
+     *     path="/api/overtimes", 
+     *     tags={"overtime"},
+     *     summary="Membuat Data Overtime",
+ 
+     *  @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *            @OA\Schema(
+     *                 @OA\Property(
+     *                      type="object",
+     *                      @OA\Property(
+     *                          property="employee_id",
+     *                          type="string"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="date",
+     *                          type="date"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="time_started",
+     *                          type="time"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="time_ended",
+     *                          type="time"
+     *                      )
+     *                 ),
+     *                 example={
+     *                     "employee_id":1,
+     *                     "date":"2022-10-28",
+     *                     "time_started":"06:00:00",
+     *                     "time_ended":"10:45:00"
+     *                }
+     *             )           
+     *         )
+     *      ),
+     * 
+     *     @OA\Response(response="200", description="Success",
+     * @OA\JsonContent(
+     *              @OA\Property(property="employee_id", type="id", example="1"),
+     *              @OA\Property(property="date", type="date", example=6500000),
+     *              @OA\Property(property="time_started", type="time", example="Reynaldo"),
+     *              @OA\Property(property="time_ended", type="time", example=8),
+     *            
+     * )           
+     * ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="invalid",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="msg", type="string", example="Terjadi kesalahan"),
+     *          )
+     *      )
+     * )
+     * 
+
      */
     public function store(Request $request)
     {
@@ -74,13 +95,12 @@ class OvertimeController extends Controller
                     'required',
                     'date_format:Y-m-d',
                     Rule::unique('overtimes')
-                      ->where('employee_id', $request->input('employee_id'))
-                      ->where('date', $request->input('date'))
+                        ->where('employee_id', $request->input('employee_id'))
+                        ->where('date', $request->input('date'))
                 ],
                 'time_started' => 'required|date_format:H:i:s|before:time_ended',
                 'time_ended' => 'required|date_format:H:i:s|after:time_started',
             ]);
-            
         } catch (Exception $e) {
             return ApiFormatter::createApi(400, 'Format data tidak sesuai');
         }
@@ -99,48 +119,70 @@ class OvertimeController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\overtime  $overtime
-     * @return \Illuminate\Http\Response
-     */
-    public function show(overtime $overtime)
-    {
-        //
-    }
+
 
     /**
-     * Show the form for editing the specified resource.
+     * Display a listing of the resource.
      *
-     * @param  \App\Models\overtime  $overtime
      * @return \Illuminate\Http\Response
-     */
-    public function edit(overtime $overtime)
-    {
-        //
-    }
+     * 
+     * * @OA\Get(
+     *     path="/api/overtime-pays/calculate", 
+     *     tags={"overtime_pay"},
+     *     summary="Menampilkan Perhitungan Hasil Overtime",
+ 
+     *  @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *         )
+     *      ),
+     * 
+     *     @OA\Response(response="200", description="Success",
+     * @OA\JsonContent(
+     *              @OA\Property(property="id", type="id", example="1"),
+     *              @OA\Property(property="summary", type="integer", example=6500000),
+     *              @OA\Property(property="name", type="string", example="Reynaldo"),
+     *              @OA\Property(property="overtime_duration_total", type="integer", example=8),
+     *              @OA\Property(property="amount", type="integer", example=80000),
+     * )           
+     * ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="invalid",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="msg", type="string", example="Terjadi kesalahan"),
+     *          )
+     *      )
+     * )
+     * 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\overtime  $overtime
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, overtime $overtime)
+    public function index()
     {
-        //
-    }
+        $new_data = [];
+        $data = Employee::with(['overtimes' => function ($q) {
+        }])->get();
+        $selected_setting = Setting::first();
+        $formula = Reference::find($selected_setting->value);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\overtime  $overtime
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(overtime $overtime)
-    {
-        //
+        for ($i = 0; $i < count($data); $i++) {
+            $overtime_duration_total = 0;
+            array_push($new_data, $data[$i]);
+            if ($new_data[$i]['overtimes'] != null && count($new_data[$i]['overtimes']) > 0) {
+                $overtime = $new_data[$i]['overtimes'];
+                for ($j = 0; $j < count($overtime); $j++) {
+                    $first  = new DateTime($overtime[$j]['time_started']);
+                    $second = new DateTime($overtime[$j]['time_ended']);
+                    $overtime_duration =  $first->diff($second);
+                    $new_data[$i]['overtimes'][$j]['overtime_duration'] = (int) $overtime_duration->format('%h');
+                    $overtime_duration_total += ((int) $overtime_duration->format('%h'));
+                }
+            }
+            $new_data[$i]['overtime_duration_total'] = $overtime_duration_total;
+            $amount = str_replace('salary', $data[$i]['salary'], (str_replace('overtime_duration_total', $overtime_duration_total, $formula->expression)));
+            $new_data[$i]['amount'] = round(eval('return ' . $amount . ';'));
+        }
+
+        return $new_data;
     }
 }

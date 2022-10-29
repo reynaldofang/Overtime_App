@@ -9,58 +9,6 @@ use Exception;
 
 class SettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function show(setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(setting $setting)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -68,6 +16,49 @@ class SettingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\setting
      * @return \Illuminate\Http\Response
+     * 
+     * @OA\PATCH(
+     *     path="/api/settings", 
+     *     tags={"setting"},
+     *     summary="Mengubah data setting",
+     *  @OA\RequestBody(
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                      type="object",
+     *                      @OA\Property(
+     *                          property="key",
+     *                          type="string"
+     *                      ),
+     *                      @OA\Property(
+     *                          property="value",
+     *                          type="integer"
+     *                      )
+     *                 ),
+     *                 example={
+     *                     "key":"overtime_method",
+     *                     "value": 1
+     *                }
+     *             )
+     *         )
+     *      ),
+     * 
+     *     @OA\Response(response="200", description="Success",
+     * @OA\JsonContent(
+     *              @OA\Property(property="key", type="string", example="overtime_method"),
+     *              @OA\Property(property="value", type="integer", example=1),
+     * )
+     * ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="invalid",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="msg", type="string", example="Terjadi kesalahan"),
+     *          )
+     *      )
+     * )
+     * 
      */
     public function update(Request $request)
     {
@@ -81,22 +72,11 @@ class SettingController extends Controller
         }
 
         $emp = Setting::first()->update($request->all());
-        
+
         if ($emp) {
             return ApiFormatter::createApi(200, 'Success');
         } else {
             return ApiFormatter::createApi(400, 'Terjadi kesalahan');
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(setting $setting)
-    {
-        //
     }
 }

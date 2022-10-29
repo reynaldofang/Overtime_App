@@ -1,0 +1,312 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "APIs Overtime Project",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/employees": {
+            "post": {
+                "tags": [
+                    "employees"
+                ],
+                "summary": "Membuat Data Employee",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "salary": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "name": "Reynaldo",
+                                    "salary": 6500000
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Reynaldo"
+                                        },
+                                        "summary": {
+                                            "type": "integer",
+                                            "example": 6500000
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Terjadi kesalahan"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/overtimes": {
+            "post": {
+                "tags": [
+                    "overtime"
+                ],
+                "summary": "Membuat Data Overtime",
+                "description": "Store a newly created resource in storage.",
+                "operationId": "1c0aaebff4e157c86d9b7197cb202612",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "": {
+                                        "properties": {
+                                            "employee_id": {
+                                                "type": "string"
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "time_started": {
+                                                "type": "time"
+                                            },
+                                            "time_ended": {
+                                                "type": "time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "employee_id": 1,
+                                    "date": "2022-10-28",
+                                    "time_started": "06:00:00",
+                                    "time_ended": "10:45:00"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "employee_id": {
+                                            "type": "id",
+                                            "example": "1"
+                                        },
+                                        "date": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": 6500000
+                                        },
+                                        "time_started": {
+                                            "type": "time",
+                                            "example": "Reynaldo"
+                                        },
+                                        "time_ended": {
+                                            "type": "time",
+                                            "example": 8
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Terjadi kesalahan"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/overtime-pays/calculate": {
+            "get": {
+                "tags": [
+                    "overtime_pay"
+                ],
+                "summary": "Menampilkan Perhitungan Hasil Overtime",
+                "description": "Display a listing of the resource.",
+                "operationId": "c431a8e1f040ada480c8e0f303b15d5a",
+                "requestBody": {
+                    "content": {
+                        "application/json": {}
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "id",
+                                            "example": "1"
+                                        },
+                                        "summary": {
+                                            "type": "integer",
+                                            "example": 6500000
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Reynaldo"
+                                        },
+                                        "overtime_duration_total": {
+                                            "type": "integer",
+                                            "example": 8
+                                        },
+                                        "amount": {
+                                            "type": "integer",
+                                            "example": 80000
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Terjadi kesalahan"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/settings": {
+            "patch": {
+                "tags": [
+                    "setting"
+                ],
+                "summary": "Mengubah data setting",
+                "description": "Update the specified resource in storage.",
+                "operationId": "c2e26f7ef1d9147d9cc3fd80807444a4",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "": {
+                                        "properties": {
+                                            "key": {
+                                                "type": "string"
+                                            },
+                                            "value": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "key": "overtime_method",
+                                    "value": 1
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "string",
+                                            "example": "overtime_method"
+                                        },
+                                        "value": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string",
+                                            "example": "Terjadi kesalahan"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

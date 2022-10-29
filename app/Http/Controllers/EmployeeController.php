@@ -8,27 +8,55 @@ use App\Helpers\ApiFormatter;
 use Exception;
 use Illuminate\Http\Request;
 
+/**
+
+ * @OA\Post(
+ *     path="/api/employees", 
+ *     tags={"employees"},
+ *     summary="Membuat Data Employee",
+ 
+ *  @OA\RequestBody(
+ *         @OA\MediaType(
+ *             mediaType="application/json",
+ *             @OA\Schema(
+ *                 @OA\Property(
+ *                      type="object",
+ *                      @OA\Property(
+ *                          property="name",
+ *                          type="string"
+ *                      ),
+ *                      @OA\Property(
+ *                          property="salary",
+ *                          type="integer"
+ *                      )
+ *                 ),
+ *                 example={
+ *                     "name":"Reynaldo",
+ *                     "salary":6500000
+ *                }
+ *             )
+ *         )
+ *      ),
+ * 
+ *     @OA\Response(response="200", description="Success",
+ * @OA\JsonContent(
+ *              @OA\Property(property="name", type="string", example="Reynaldo"),
+ *              @OA\Property(property="summary", type="integer", example=6500000),
+ * )
+ * ),
+ *      @OA\Response(
+ *          response=400,
+ *          description="invalid",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="msg", type="string", example="Terjadi kesalahan"),
+ *          )
+ *      )
+ * )
+ */
+
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -58,49 +86,6 @@ class EmployeeController extends Controller
             return ApiFormatter::createApi(400, 'Terjadi kesalahan');
         }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function show(employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\employee  $employee
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(employee $employee)
-    {
-        //
-    }
 }
+
+
