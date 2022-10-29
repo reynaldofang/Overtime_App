@@ -177,6 +177,14 @@
                 "summary": "Menampilkan Perhitungan Hasil Overtime",
                 "description": "Display a listing of the resource.",
                 "operationId": "c431a8e1f040ada480c8e0f303b15d5a",
+                "parameters": [
+                    {
+                        "name": "month",
+                        "in": "query",
+                        "description": "Filter month",
+                        "required": true
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {}

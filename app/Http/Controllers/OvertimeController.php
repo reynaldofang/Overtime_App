@@ -130,8 +130,13 @@ class OvertimeController extends Controller
      *     path="/api/overtime-pays/calculate", 
      *     tags={"overtime_pay"},
      *     summary="Menampilkan Perhitungan Hasil Overtime",
- 
-     *  @OA\RequestBody(
+     *      @OA\Parameter(
+     *         name="month",
+     *         in="query",
+     *         description="Filter month",
+     *         required=true,
+     *      ),
+     *      @OA\RequestBody(
      *         @OA\MediaType(
      *             mediaType="application/json",
      *         )
@@ -157,10 +162,21 @@ class OvertimeController extends Controller
      * 
 
      */
-    public function index()
+    public function index(Request $request)
     {
+        try {
+            $validate = $request->validate([
+                'month' => 'required|date_format:Y-m'
+            ]);
+        } catch (Exception $e) {
+            return ApiFormatter::createApi(400, 'Format data tidak sesuai');
+        }
+
         $new_data = [];
-        $data = Employee::with(['overtimes' => function ($q) {
+        $date = $request->month;
+        $data = Employee::with(['overtimes' => function ($q) use ($date) {
+            $newdate = explode("-", $date);
+            $q->whereYear('date', $newdate[0])->whereMonth('date', $newdate[1]);
         }])->get();
         $selected_setting = Setting::first();
         $formula = Reference::find($selected_setting->value);

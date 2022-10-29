@@ -1,11 +1,13 @@
 <?php
 
 namespace Tests\Unit;
+use Tests\TestCase;
 
-use PHPUnit\Framework\TestCase;
 
 class OvertimeTest extends TestCase
 {
+
+
     /**
      * A basic unit test example.
      *
@@ -13,6 +15,12 @@ class OvertimeTest extends TestCase
      */
     public function test_example()
     {
-        $this->assertTrue(true);
+        //$this->assertTrue(true);
+        $value = [
+            'name'  => 'Money',
+            'salary' => 65000000
+        ];
+
+        $this->post('/overtimes', $value)->assertStatus(201);
     }
 }
